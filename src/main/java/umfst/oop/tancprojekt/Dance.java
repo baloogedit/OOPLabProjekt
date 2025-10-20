@@ -10,28 +10,28 @@ package umfst.oop.tancprojekt;
  */
 public class Dance {
     
-    public String name;
+    public String danceName;
     public String region;
     public int minutes;
 
     public Dance(String name, String region, int minutes) {
-        this.name = name;
+        this.danceName = name;
         this.region = region;
         this.minutes = minutes;
     }
     
     public void print()
     {
-        System.out.println("Dance: " +name+" from: " +region+ ", duration: " +minutes+ " minutes." );
+        System.out.println("Dance: " +danceName+" from: " +region+ ", duration: " +minutes+ " minutes." );
     }
     
 
     public String getName() {
-        return name;
+        return danceName;
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.danceName = name;
     }
 
     public String getRegion() {

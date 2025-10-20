@@ -10,31 +10,32 @@ package umfst.oop.tancprojekt;
  */
 public class Clothes {
     
-    private String name;
-    private char size;
+    private String clothName;
+ // private char size;
     //size with enum
+    private Size size;
     private Dancer assignedTo;
 
-    public Clothes(String name, char size, Dancer assignedTo) {
-        this.name = name;
+    public Clothes(String name, Size size, Dancer assignedTo) {
+        this.clothName = name;
         this.size = size;
         this.assignedTo = null;//not assigned yet
         
     }
 
     public String getName() {
-        return name;
+        return clothName;
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.clothName = name;
     }
 
-    public char getSize() {
+    public Size getSize() {
         return size;
     }
 
-    public void setSize(char size) {
+    public void setSize(Size size) {
         this.size = size;
     }
 
