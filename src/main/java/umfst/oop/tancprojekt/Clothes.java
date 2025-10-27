@@ -11,10 +11,18 @@ package umfst.oop.tancprojekt;
 public class Clothes {
     
     private String clothName;
- // private char size;
+    
+    
     //size with enum
     private Size size;
     private Dancer assignedTo;
+    
+    public Clothes(String name, Size size)
+    {
+        this.clothName=name;
+        this.size=size;
+        this.assignedTo=null;
+    }
 
     public Clothes(String name, Size size, Dancer assignedTo) {
         this.clothName = name;
@@ -48,6 +56,11 @@ public class Clothes {
     }
     
     
+    public void print()
+    {
+        System.out.println("Costume: " + clothName + ", size: " + size + ", assigned to: " + assignedTo);
+    
+    }
     
     
 }

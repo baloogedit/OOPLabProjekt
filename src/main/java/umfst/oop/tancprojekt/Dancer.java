@@ -8,38 +8,15 @@ package umfst.oop.tancprojekt;
  *
  * @author edite
  */
-public class Dancer
+public class Dancer extends Person
 {
-    
-    private String name;
-    private int age;
     private String role;
+    private int knownDances;
 
-    public Dancer(String name, int age, String role) {
-        this.name = name;
-        this.age = age;
+    public Dancer(String name, int age, String role, int dances) {
+        super(name, age);
         this.role = role;
-    }
-    
-    public void introduction()
-    {
-        System.out.println("I'm " +name+ ", I am "+ age+ "years old. I am a " +role+ ".");
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
+        this.knownDances=dances;
     }
 
     public String getRole() {
@@ -50,6 +27,17 @@ public class Dancer
         this.role = role;
     }
     
+    
+    @Override
+    public void intro()
+    {
+        System.out.println("I am"+ name +", I am "+ age + "years old and I dance as a "+ role);
+    }
+
+    public void print()
+    {
+        System.out.println("Name: "+ name +", age: "+ age + ", role: "+ role + "known dances: "+ knownDances);
+    }
     
     
 }

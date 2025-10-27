@@ -15,14 +15,12 @@ public class Event {
     private String eventName;
     private Date date;
     private String place;
-    private Dance danceName;
     
-    public Event (String name, Date date, String place, Dance dancing)
+    public Event (String name, Date date, String place)
     {
         this.eventName=name;
         this.date=date;
         this.place=place;
-        this.danceName=dancing;
     }
 
     public String getEventName() {
@@ -49,14 +47,10 @@ public class Event {
         this.place = place;
     }
 
-    public Dance getDanceName() {
-        return danceName;
+    public void print()
+    {
+        System.out.println("Event: " + eventName + ", date: " + date + ", place: " + place);
     }
 
-    public void setDanceName(Dance danceName) {
-        this.danceName = danceName;
-    }
-    
-    
     
 }
