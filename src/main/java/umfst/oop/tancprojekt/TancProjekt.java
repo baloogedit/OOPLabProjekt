@@ -4,9 +4,14 @@
 
 package umfst.oop.tancprojekt;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Scanner;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 
 /**
@@ -24,6 +29,8 @@ public class TancProjekt {
 
     public static void main(String[] args) 
     {
+        
+        loadDataFromJson();//load json file
         
         //dancers.add(new Dancer("Edit", 19, "female",7));
         //dancers.add(new Dancer("David", 20, "male",8));
@@ -89,6 +96,7 @@ public class TancProjekt {
 
         dancers.add(new Dancer(name, age, role, dance));
         System.out.println("Dancer added successfully!");
+        saveDataToJson();
     }
     
     //case 2
@@ -104,6 +112,7 @@ public class TancProjekt {
         int length=sc.nextInt();
         
         dances.add(new Dance(name, region, length));
+        saveDataToJson();
     }
     
     //case 3
@@ -125,6 +134,7 @@ public class TancProjekt {
 
         costumes.add(new Clothes(name, size));
         System.out.println("Costume added successfully!");
+        saveDataToJson();
     }
     
     //case 4
@@ -141,6 +151,7 @@ public class TancProjekt {
         String place = sc.nextLine();
         
         events.add(new Event(event, date, place));
+        saveDataToJson();
     }
     
     
@@ -252,6 +263,123 @@ public class TancProjekt {
         }
     }
     
+    
+    
+    
+    //load the json file
+    private static void loadDataFromJson() {
+        try {
+            String jsonText = Files.readString(Paths.get("jsonFile.json"));
+            JSONObject jsonObj = new JSONObject(jsonText);
+
+            // Dancers
+            JSONArray dancerArr = jsonObj.getJSONArray("dancers");
+            for (int i = 0; i < dancerArr.length(); i++) {
+                JSONObject d = dancerArr.getJSONObject(i);
+                dancers.add(new Dancer(
+                        d.getString("name"),
+                        d.getInt("age"),
+                        d.getString("role"),
+                        d.getInt("dances")));
+            }
+
+            // Dances
+            JSONArray danceArr = jsonObj.getJSONArray("dances");
+            for (int i = 0; i < danceArr.length(); i++) {
+                JSONObject d = danceArr.getJSONObject(i);
+                dances.add(new Dance(
+                        d.getString("name"),
+                        d.getString("region"),
+                        d.getInt("minutes")));
+            }
+
+            // Costumes
+            JSONArray costumeArr = jsonObj.getJSONArray("costumes");
+            for (int i = 0; i < costumeArr.length(); i++) {
+                JSONObject c = costumeArr.getJSONObject(i);
+                Size size;
+                try {
+                    size = Size.valueOf(c.getString("size").toUpperCase());
+                } catch (Exception e) {
+                    size = Size.M;
+                }
+                costumes.add(new Clothes(c.getString("name"), size));
+            }
+
+            // Events
+            JSONArray eventArr = jsonObj.getJSONArray("events");
+            for (int i = 0; i < eventArr.length(); i++) {
+                JSONObject e = eventArr.getJSONObject(i);
+                Date date = Date.valueOf(e.getString("date"));
+                events.add(new Event(
+                        e.getString("name"),
+                        date,
+                        e.getString("place")));
+            }
+
+        } catch (IOException e) {
+            System.out.println("Cannot read data.json: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println(" Error parsing JSON: " + e.getMessage());
+        }
+    }
+    
+    private static void saveDataToJson() {
+    try {
+        JSONObject root = new JSONObject();
+
+        //dancers
+        JSONArray dancerArr = new JSONArray();
+        for (Dancer d : dancers) {
+            JSONObject obj = new JSONObject();
+            obj.put("name", d.getName());
+            obj.put("age", d.getAge());
+            obj.put("role", d.getRole());
+            obj.put("dances", d.getKnownDances());
+            dancerArr.put(obj);
+        }
+        root.put("dancers", dancerArr);
+
+        //dances
+        JSONArray danceArr = new JSONArray();
+        for (Dance d : dances) {
+            JSONObject obj = new JSONObject();
+            obj.put("name", d.getName());
+            obj.put("region", d.getRegion());
+            obj.put("minutes", d.getMinutes());
+            danceArr.put(obj);
+        }
+        root.put("dances", danceArr);
+
+        //costumes
+        JSONArray costumeArr = new JSONArray();
+        for (Clothes c : costumes) {
+            JSONObject obj = new JSONObject();
+            obj.put("name", c.getName());
+            obj.put("size", c.getSize().toString());
+            costumeArr.put(obj);
+        }
+        root.put("costumes", costumeArr);
+
+        //events
+        JSONArray eventArr = new JSONArray();
+        for (Event e : events) {
+            JSONObject obj = new JSONObject();
+            obj.put("name", e.getEventName());
+            obj.put("date", e.getDate().toString());
+            obj.put("place", e.getPlace());
+            eventArr.put(obj);
+        }
+        root.put("events", eventArr);
+
+        //write to file
+        Files.writeString(Paths.get("data.json"), root.toString(4)); // print with 4 spaces
+        System.out.println("Data saved successfully to data.json!");
+
+    } catch (IOException e) {
+        System.out.println("Error writing to data.json: " + e.getMessage());
+    }
+}
     
     
 }
