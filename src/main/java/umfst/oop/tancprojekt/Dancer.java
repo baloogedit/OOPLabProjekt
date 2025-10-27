@@ -23,6 +23,14 @@ public class Dancer extends Person
         return role;
     }
 
+    public int getKnownDances() {
+        return knownDances;
+    }
+
+    public void setKnownDances(int knownDances) {
+        this.knownDances = knownDances;
+    }
+
     public void setRole(String role) {
         this.role = role;
     }
