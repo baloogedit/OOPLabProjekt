@@ -52,23 +52,28 @@
     "costumes": [
         {
             "size": "M",
-            "name": "Kalocsai melleny"
+            "name": "Kalocsai melleny",
+            "assignedTo": null
         },
         {
             "size": "L",
-            "name": "Kalotaszegi ing"
+            "name": "Kalotaszegi ing",
+            "assignedTo": "David"
         },
         {
             "size": "XL",
-            "name": "Szentivanyi ing"
+            "name": "Szentivanyi ing",
+            "assignedTo": null
         },
         {
             "size": "S",
-            "name": "Mezosegi koteny"
+            "name": "Mezosegi koteny",
+            "assignedTo": null
         },
         {
             "size": "M",
-            "name": "Somogyi kalap"
+            "name": "Somogyi kalap",
+            "assignedTo": null
         }
     ],
     "events": [
