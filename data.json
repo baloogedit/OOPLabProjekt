@@ -41,6 +41,12 @@
             "name": "Balazs",
             "age": 18,
             "dances": 6
+        },
+        {
+            "role": "leader",
+            "name": "Izabella",
+            "age": 40,
+            "dances": 8
         }
     ],
     "costumes": [
