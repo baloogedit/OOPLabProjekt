@@ -58,7 +58,8 @@ public class Clothes {
     
     public void print()
     {
-        System.out.println("Costume: " + clothName + ", size: " + size + ", assigned to: " + assignedTo);
+        String dancerName = (assignedTo == null) ? "none" : assignedTo.getName();
+        System.out.println("Costume: " + clothName + ", size: " + size + ", assigned to: " + dancerName);
     
     }
     
