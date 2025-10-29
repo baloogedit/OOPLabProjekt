@@ -11,6 +11,7 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Scanner;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 
@@ -18,7 +19,8 @@ import org.json.JSONObject;
  *
  * @author edite
  */
-public class TancProjekt {
+public class TancProjekt 
+{
     
      private static ArrayList <Dancer> dancers=new ArrayList<>();
      private static ArrayList <Dance> dances=new ArrayList<>();
@@ -32,14 +34,7 @@ public class TancProjekt {
         
         loadDataFromJson();//load json file
         
-        //dancers.add(new Dancer("Edit", 19, "female",7));
-        //dancers.add(new Dancer("David", 20, "male",8));
-        
-        //dances.add(new Dance("verbunk", "Mezoseg", 3));
-        //dances.add(new Dance("csardas", "Nyaradmente", 5));
-        
-                    
-                
+              
         int choice = 0;
         
         do
@@ -96,7 +91,7 @@ public class TancProjekt {
 
         dancers.add(new Dancer(name, age, role, dance));
         System.out.println("Dancer added successfully!");
-        saveDataToJson();
+        saveDataToJson();//insert in json the added dancer
     }
     
     //case 2
@@ -121,8 +116,9 @@ public class TancProjekt {
         System.out.print("Enter costume name: ");
         String name = sc.nextLine();
 
-        System.out.print("Enter size: ");
+        System.out.print("Enter size(XS, S, M, L, XL): ");
         String sizeInput = sc.nextLine().toUpperCase();
+        //if it's lowercase, it will put into uppercase so that it can be converted to enum
 
         Size size;
         try {
@@ -145,7 +141,7 @@ public class TancProjekt {
         
         System.out.print("Enter event date (YYYY-MM-DD): ");
         String dateStr = sc.nextLine();
-        Date date = Date.valueOf(dateStr);
+        Date date = Date.valueOf(dateStr);//convert string into date
 
         System.out.print("Enter event place: ");
         String place = sc.nextLine();
@@ -165,6 +161,8 @@ public class TancProjekt {
         }
 
         System.out.println("\n--- Dancer list ---");
+        
+        //for each Dancer in dancers list, it calls the print method
         for (Dancer d: dancers) 
         {
             d.print();
@@ -181,6 +179,8 @@ public class TancProjekt {
         }
         
         System.out.println("\n--- Dances list ---");
+        
+        //same as dancers
         for (Dance d: dances) 
         {
             d.print();
@@ -192,12 +192,15 @@ public class TancProjekt {
     //case 7
     private static void assignCostume()
     {
+        //if one of the classes involved is empty, it throws an error message
         if (costumes.isEmpty() || dancers.isEmpty()) {
             System.out.println("You need at least one dancer and one costume to assign.");
             return;
         }
 
         System.out.println("\n--- Costume List ---");
+        
+        //i is for printing the number of each item, so is easier to select which one you want to assign to dancer
         int i=1;
         for (Clothes c: costumes) {
             System.out.print(i + ". ");
@@ -210,17 +213,22 @@ public class TancProjekt {
         sc.nextLine(); // clear buffer
 
         System.out.println("\n--- Dancer List ---");
+        //j is for printing the number of each item, so is easier to select which dancer you want to assign to the costume
         int j=1;
         for (Dancer d: dancers) {
+            //printing the nr.
             System.out.print(j+". ");
+            //calls the printing method 
             d.print();
+            //increasing number
             j++;
         }
 
         System.out.print("Enter dancer number: ");
-        int dancerIndex = sc.nextInt() - 1;
+        int dancerIndex = sc.nextInt() - 1;//-1 so that the counting starts from 1, not 0
         sc.nextLine();
 
+        //if the selection was valid( no 0 and no bigger number than the max objects were scanned)
         if (costumeIndex >= 0 && costumeIndex < costumes.size()
                 && dancerIndex >= 0 && dancerIndex < dancers.size())
         {
@@ -228,9 +236,14 @@ public class TancProjekt {
             Clothes selectedCostume = costumes.get(costumeIndex);
             Dancer selectedDancer = dancers.get(dancerIndex);
 
+            //call for the selected costume's assigning method 
             selectedCostume.setAssignedTo(selectedDancer);
+            //print out the final costume object
             System.out.println("Costume '" + selectedCostume.getName() + "' assigned to " + selectedDancer.getName() + ".");
+            //updates the json from assignedTo=null to the assigned dancer's name
+            saveDataToJson();
         } 
+        //handle invalid inputs
         else 
         {
             System.out.println("Invalid selection.");
@@ -274,12 +287,16 @@ public class TancProjekt {
     
     //load the json file
     private static void loadDataFromJson() {
-        try {
+        try 
+        {
+            //load the file into memory, parse as json object
             String jsonText = Files.readString(Paths.get("data.json"));
             JSONObject jsonObj = new JSONObject(jsonText);
 
             // Dancers
+            // split into little arrays based on the keys (dancers, dances, etc.)
             JSONArray dancerArr = jsonObj.getJSONArray("dancers");
+            //loop through the json array
             for (int i = 0; i < dancerArr.length(); i++) {
                 JSONObject d = dancerArr.getJSONObject(i);
                 dancers.add(new Dancer(
@@ -287,6 +304,7 @@ public class TancProjekt {
                         d.getInt("age"),
                         d.getString("role"),
                         d.getInt("dances")));
+                //recreate each Dancer from the data in Json
             }
 
             // Dances
@@ -310,6 +328,22 @@ public class TancProjekt {
                     size = Size.M;
                 }
                 costumes.add(new Clothes(c.getString("name"), size));
+                
+                //if assignedTo is not null, assign to a dancer
+                if (c.has("assignedTo") && !c.isNull("assignedTo")) 
+                {
+                    String dancerName = c.getString("assignedTo");
+                    for (Dancer d : dancers) 
+                    {
+                        if (d.getName().equalsIgnoreCase(dancerName)) 
+                        {
+                            costumes.get(i).setAssignedTo(d);
+                            break;
+                        }
+                    }
+                }
+            
+        
             }
 
             // Events
@@ -323,77 +357,97 @@ public class TancProjekt {
                         e.getString("place")));
             }
 
-        } catch (IOException e) {
+        } 
+        catch (IOException e) 
+        {
             System.out.println("Cannot read data.json: " + e.getMessage());
-        } catch (Exception e) {
+        } 
+        catch (JSONException e) 
+        {
             System.out.println(" Error parsing JSON: " + e.getMessage());
         }
     }
     
-    private static void saveDataToJson() {
-    try {
-        JSONObject root = new JSONObject();
+    private static void saveDataToJson() 
+    {
+        try 
+        {
+            //creating a main "folder" that contains every array
+            JSONObject root = new JSONObject();
 
-        //dancers
-        JSONArray dancerArr = new JSONArray();
-        for (Dancer d : dancers) {
-            JSONObject obj = new JSONObject();
-            obj.put("name", d.getName());
-            obj.put("age", d.getAge());
-            obj.put("role", d.getRole());
-            obj.put("dances", d.getKnownDances());
-            dancerArr.put(obj);
-        }
-        root.put("dancers", dancerArr);
-
-        //dances
-        JSONArray danceArr = new JSONArray();
-        for (Dance d : dances) {
-            JSONObject obj = new JSONObject();
-            obj.put("name", d.getName());
-            obj.put("region", d.getRegion());
-            obj.put("minutes", d.getMinutes());
-            danceArr.put(obj);
-        }
-        root.put("dances", danceArr);
-
-        //costumes
-        JSONArray costumeArr = new JSONArray();
-        for (Clothes c : costumes) {
-            JSONObject obj = new JSONObject();
-            obj.put("name", c.getName());
-            obj.put("size", c.getSize().toString());
-            
-            if (c.getAssignedTo() != null) {
-            obj.put("assignedTo", c.getAssignedTo().getName());
-            } 
-            else {
-                obj.put("assignedTo", JSONObject.NULL);
+            //dancers
+            JSONArray dancerArr = new JSONArray();//create json array that stoes data
+            //loops through all dancer objects
+            for (Dancer d : dancers) {
+                //turn each one into small Json object
+                JSONObject obj = new JSONObject();
+                obj.put("name", d.getName());
+                obj.put("age", d.getAge());
+                obj.put("role", d.getRole());
+                obj.put("dances", d.getKnownDances());
+                dancerArr.put(obj);//adds the small objects into one array
             }
-            
-            costumeArr.put(obj);
+            root.put("dancers", dancerArr);
+            //add the previous array to the main root object
+            // under the key:dancers
+
+            //dances
+            JSONArray danceArr = new JSONArray();
+            for (Dance d : dances) {
+                JSONObject obj = new JSONObject();
+                obj.put("name", d.getName());
+                obj.put("region", d.getRegion());
+                obj.put("minutes", d.getMinutes());
+                danceArr.put(obj);
+            }
+            root.put("dances", danceArr);
+
+            //costumes
+            JSONArray costumeArr = new JSONArray();
+            for (Clothes c : costumes) {
+                JSONObject obj = new JSONObject();
+                obj.put("name", c.getName());
+                obj.put("size", c.getSize().toString());
+
+                //check if assignedTo has value
+                if (c.getAssignedTo() != null)
+                {
+                    //if it is not null, it prints out the dancer name only (string)
+                    obj.put("assignedTo", c.getAssignedTo().getName());
+                } 
+                else 
+                {
+                    //else, it prints out null value
+                    obj.put("assignedTo", JSONObject.NULL);
+                }
+
+                costumeArr.put(obj);
+            }
+            root.put("costumes", costumeArr);
+
+            //events
+            JSONArray eventArr = new JSONArray();
+            for (Event e : events) {
+                JSONObject obj = new JSONObject();
+                obj.put("name", e.getEventName());
+                //convert Date to string, otherwise it can't be printed
+                obj.put("date", e.getDate().toString());
+                obj.put("place", e.getPlace());
+                eventArr.put(obj);
+            }
+            root.put("events", eventArr);
+
+            //write to file (file name=data.json)
+            Files.writeString(Paths.get("data.json"), root.toString(4));
+                    // print with 4 spaces before the text so that is more readable
+            System.out.println("Data saved successfully to data.json!");
+
         }
-        root.put("costumes", costumeArr);
-
-        //events
-        JSONArray eventArr = new JSONArray();
-        for (Event e : events) {
-            JSONObject obj = new JSONObject();
-            obj.put("name", e.getEventName());
-            obj.put("date", e.getDate().toString());
-            obj.put("place", e.getPlace());
-            eventArr.put(obj);
+        catch (IOException e) 
+        {
+            System.out.println("Error writing to data.json: " + e.getMessage());
         }
-        root.put("events", eventArr);
-
-        //write to file
-        Files.writeString(Paths.get("data.json"), root.toString(4)); // print with 4 spaces
-        System.out.println("Data saved successfully to data.json!");
-
-    } catch (IOException e) {
-        System.out.println("Error writing to data.json: " + e.getMessage());
     }
-}
     
     
 }
