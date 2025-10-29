@@ -198,8 +198,11 @@ public class TancProjekt {
         }
 
         System.out.println("\n--- Costume List ---");
-        for (int i = 0; i < costumes.size(); i++) {
-            System.out.println((i + 1) + ". " + costumes.get(i));
+        int i=1;
+        for (Clothes c: costumes) {
+            System.out.print(i + ". ");
+            c.print();
+            i++;
         }
 
         System.out.print("Enter costume number to assign: ");
@@ -207,8 +210,11 @@ public class TancProjekt {
         sc.nextLine(); // clear buffer
 
         System.out.println("\n--- Dancer List ---");
-        for (int i = 0; i < dancers.size(); i++) {
-            System.out.println((i + 1) + ". " + dancers.get(i).getName());
+        int j=1;
+        for (Dancer d: dancers) {
+            System.out.print(j+". ");
+            d.print();
+            j++;
         }
 
         System.out.print("Enter dancer number: ");
@@ -269,7 +275,7 @@ public class TancProjekt {
     //load the json file
     private static void loadDataFromJson() {
         try {
-            String jsonText = Files.readString(Paths.get("jsonFile.json"));
+            String jsonText = Files.readString(Paths.get("data.json"));
             JSONObject jsonObj = new JSONObject(jsonText);
 
             // Dancers
