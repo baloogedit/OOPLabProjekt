@@ -363,6 +363,14 @@ public class TancProjekt {
             JSONObject obj = new JSONObject();
             obj.put("name", c.getName());
             obj.put("size", c.getSize().toString());
+            
+            if (c.getAssignedTo() != null) {
+            obj.put("assignedTo", c.getAssignedTo().getName());
+            } 
+            else {
+                obj.put("assignedTo", JSONObject.NULL);
+            }
+            
             costumeArr.put(obj);
         }
         root.put("costumes", costumeArr);
