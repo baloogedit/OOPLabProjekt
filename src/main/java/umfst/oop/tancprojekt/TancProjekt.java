@@ -366,6 +366,10 @@ public class TancProjekt
         {
             System.out.println(" Error parsing JSON: " + e.getMessage());
         }
+        finally
+        {
+            System.out.println("JSON exercise completed");
+        }
     }
     
     private static void saveDataToJson() 
