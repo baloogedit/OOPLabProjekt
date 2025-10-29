@@ -49,7 +49,8 @@ public class TancProjekt
             System.out.println("7. Assign costume to dancer");
             System.out.println("8. List costumes with assigned dancer");
             System.out.println("9. List upcoming events");
-            System.out.println("10. Exit");
+            System.out.println("10. Print one dance's description");
+            System.out.println("11. Exit");
             System.out.println("Choose an option: ");
             choice=sc.nextInt();
             sc.nextLine();
@@ -64,11 +65,12 @@ public class TancProjekt
                 case 7 -> assignCostume();
                 case 8 -> listCostumes();
                 case 9 -> listEvents();
-                case 10 -> System.out.println("Exiting...");
+                case 10 -> descriptionOfDance();
+                case 11 -> System.out.println("Exiting...");
                 default -> System.out.println("Invalid choice. Try again!");
             }
         }
-        while (choice!=10);
+        while (choice!=11);
     }
     
     
@@ -280,6 +282,29 @@ public class TancProjekt
         {
             e.print();
         }
+    }
+    
+    
+    //case 10
+    private static void descriptionOfDance()
+    {
+        //list the whole dances list, so it's easier to choose one
+        System.out.println("\n--- Dance list ---");
+        int i=1;
+        for (Dance d: dances) {
+            System.out.print(i + ". ");
+            d.print();
+            i++;
+        }
+        
+        //select one of the dances
+        System.out.print("Enter dancer number: ");
+        int dancesIndex = sc.nextInt() - 1;
+        Dance selectedDance = dances.get(dancesIndex);
+        selectedDance.perform();
+        selectedDance.showOrigin();
+        selectedDance.showDuration();
+        selectedDance.describeStyle();  
     }
     
     
