@@ -44,7 +44,7 @@ public class Dancer extends Person
 
     public void print()
     {
-        System.out.println("Name: "+ name +", age: "+ age + ", role: "+ role + "known dances: "+ knownDances);
+        System.out.println("Name: "+ name +", age: "+ age + ", role: "+ role + ", known dances: "+ knownDances);
     }
     
     
