@@ -37,7 +37,7 @@
             "dances": 2
         },
         {
-            "role": "member",
+            "role": "beginner",
             "name": "Balazs",
             "age": 18,
             "dances": 6
@@ -48,8 +48,8 @@
             "age": 40,
             "dances": 8
         }
-        
     ],
+    "staff": [],
     "costumes": [
         {
             "size": "M",
@@ -104,6 +104,7 @@
             "place": "Gyergyoszentmiklos"
         }
     ],
+    "choreographers": [],
     "dances": [
         {
             "minutes": 3,

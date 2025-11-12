@@ -62,7 +62,8 @@ public class TancProjekt
             System.out.println("13. List staff member");
             System.out.println("14. List all people");
             System.out.println("15. Get total dancer count");
-            System.out.println("16. Exit");
+            System.out.println("16. Change dancer's role");
+            System.out.println("17. Exit");
             System.out.println("Choose an option: ");
             
             // choosing the option
@@ -90,12 +91,13 @@ public class TancProjekt
                 case 13 -> listStaff();
                 case 14 -> listAllPeople();
                 case 15 -> getTotalDancerCount();
+                case 16 -> changeDancerRole();
 
-                case 16 -> System.out.println("Exiting..."); 
+                case 17 -> System.out.println("Exiting..."); 
                 default -> System.out.println("Invalid choice. Try again!");
             }
         }
-        while (choice!=16);
+        while (choice!=17);
     }
     
     private static final List<String> VALID_ROLES = Arrays.asList("leader", "member", "beginner", "expert");
@@ -209,11 +211,13 @@ public class TancProjekt
         }
 
         System.out.println("\n--- Dancer list ---");
-        
+        int i=1;
         //for each Dancer in dancers list, it calls the print method
         for (Dancer d: dancers) 
         {
+            System.out.print(i+". ");
             d.print();
+            i++;
         }
     }
     
@@ -435,6 +439,52 @@ public class TancProjekt
         // call Dancers class's static method
         int count = Dancer.getDancerCount();
         System.out.println("Total number of Dancer objects created: " + count);
+    }
+    
+    //case 16
+    private static void changeDancerRole() {
+        if (dancers.isEmpty()) {
+            System.out.println("No dancers yet.");
+            return;
+        }
+
+        listDancers();
+
+        try {
+            System.out.print("Enter dancer number to change role: ");
+            int dancerIndex = sc.nextInt() - 1;
+            sc.nextLine(); // clear buffer
+
+            if (dancerIndex < 0 || dancerIndex >= dancers.size()) {
+                System.out.println("Invalid dancer selection.");
+                return;
+            }
+
+            Dancer selectedDancer = dancers.get(dancerIndex);
+
+            System.out.print("Enter new role (leader/member/beginner/expert): ");
+            String newRole = sc.nextLine();
+
+            // existing validation method
+            if (!isValidRole(newRole)) {
+                throw new InvalidRoleException("Invalid role: '" + newRole + "'. Must be one of: " + VALID_ROLES);
+            }
+
+            System.out.print("Enter reason for the change: ");
+            String reason = sc.nextLine();
+
+            // call the overloaded method
+            selectedDancer.setRole(newRole, reason);
+
+            System.out.println("Role updated successfully!");
+            saveDataToJson(); // save to JSON
+
+        } catch (InvalidRoleException e) { // custom exception
+            System.err.println("Error changing role: " + e.getMessage());
+        } catch (InputMismatchException e) {
+            System.err.println("Invalid input, please use a number for the dancer.");
+            sc.nextLine(); // clear buffer after error
+        }
     }
     
     
