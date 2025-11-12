@@ -10,9 +10,9 @@ package umfst.oop.tancprojekt;
  */
 public class Dance implements DanceStructure{
     
-    public String danceName;
-    public String region;
-    public int minutes;
+    private String danceName;
+    private String region;
+    private int minutes;
 
     public Dance(String name, String region, int minutes) {
         this.danceName = name;
